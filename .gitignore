@@ -1,0 +1,14 @@
+# Editor and OS noise
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Nothing here is built, but keep stray output out of the repo anyway
+node_modules/
+*.log
+
+# Exported memes and scratch files
+*.local.*
+/out/

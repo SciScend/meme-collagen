@@ -1,0 +1,30 @@
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  headless:
+    name: ${{ matrix.mode }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # The app has to work when opened straight off disk, so both are tested.
+        mode: [http, file]
+    steps:
+      - uses: actions/checkout@v4
+
+      # Chrome is preinstalled on the ubuntu-latest runner image; this makes it
+      # obvious in the log which build the results came from.
+      - name: Chrome version
+        run: google-chrome --version
+
+      - name: Run the suite
+        run: ./tests/run.sh ${{ matrix.mode == 'file' && 'file' || '' }}

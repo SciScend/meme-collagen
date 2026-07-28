@@ -1,0 +1,37 @@
+name: Feature request
+description: Suggest something the editor should be able to do
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before writing, it is worth checking the "Not included" section of the README — a few
+        things are left out on purpose, though none of them permanently.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What are you trying to do?
+      description: Describe the situation rather than the solution; it often has more than one.
+      placeholder: I want the same caption style on ten memes without setting it up each time.
+    validations:
+      required: true
+
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like it to do?
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: constraints
+    attributes:
+      label: Does it fit the project's constraints?
+      description: >
+        MemeCollagen is one folder of vanilla JavaScript that runs offline from a file:// URL.
+        Anything needing a dependency, a build step or a server is out of scope — but say so
+        and suggest it anyway if you think it is worth the trade.
+      options:
+        - label: This can be done with no dependencies and no build step
+        - label: This still works offline, with no server

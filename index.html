@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>MemeCollagen — meme collage editor</title>
+<meta name="description" content="Collage + generator. Build meme collages in the browser: arrange pictures, caption them, export a PNG. Nothing is uploaded anywhere.">
+<link rel="stylesheet" href="fonts.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="app">
+
+  <header class="toolbar">
+    <div class="brand">MemeCollagen</div>
+    <div class="actions">
+      <button id="btn-add-image">+ Image</button>
+      <button id="btn-add-text">+ Text</button>
+      <button id="btn-undo" class="icon" title="Undo (Ctrl+Z)" disabled>&#8630;</button>
+      <button id="btn-redo" class="icon" title="Redo (Ctrl+Shift+Z)" disabled>&#8631;</button>
+      <button id="btn-download" class="primary">Download PNG</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="stage" id="stage">
+      <canvas id="canvas"></canvas>
+      <p class="hint" id="hint">Drop images here &middot; click <b>+ Image</b> &middot; or paste from the clipboard</p>
+    </section>
+
+    <aside class="panel" id="panel">
+
+      <!-- ============ nothing selected: canvas, templates, stickers ============ -->
+      <div class="section" id="panel-canvas">
+        <h2>Canvas</h2>
+
+        <label>Shape</label>
+        <div class="chips" id="ratio-chips">
+          <button data-w="1000" data-h="1000" class="chip">1:1</button>
+          <button data-w="1000" data-h="1250" class="chip">4:5</button>
+          <button data-w="1080" data-h="1920" class="chip">9:16</button>
+          <button data-w="1600" data-h="900" class="chip">16:9</button>
+        </div>
+
+        <label for="bg-color">Background</label>
+        <div class="row">
+          <input type="color" id="bg-color" value="#ffffff">
+          <span class="value" id="bg-value">#ffffff</span>
+        </div>
+
+        <h2 class="spaced">Collage layout</h2>
+        <div class="chips" id="layout-chips">
+          <button class="chip" data-layout="grid">Grid</button>
+          <button class="chip" data-layout="rows">Rows</button>
+          <button class="chip" data-layout="cols">Columns</button>
+          <button class="chip" data-layout="feature">Big + side</button>
+          <button class="chip" data-layout="strip">Filmstrip</button>
+        </div>
+        <label for="layout-gap">Gap <span class="value" id="layout-gap-value">12px</span></label>
+        <input type="range" id="layout-gap" min="0" max="80" step="1" value="12">
+
+        <h2 class="spaced">Templates</h2>
+        <div class="chips" id="template-chips">
+          <button class="chip" data-template="topbottom">Top &amp; bottom</button>
+          <button class="chip" data-template="bar">Caption bar</button>
+          <button class="chip" data-template="demotivational">Demotivational</button>
+          <button class="chip" data-template="bubble">Speech bubble</button>
+        </div>
+
+        <h2 class="spaced">Stickers</h2>
+        <div class="stickers" id="sticker-grid"></div>
+
+        <h2 class="spaced">Export</h2>
+        <label for="export-scale">Resolution</label>
+        <select id="export-scale">
+          <option value="1">1&times; (canvas size)</option>
+          <option value="2" selected>2&times; (sharper)</option>
+          <option value="3">3&times;</option>
+        </select>
+
+        <p class="tip" id="storage-note">Your work is saved automatically in this browser.</p>
+        <button class="danger wide" id="btn-clear">Clear everything</button>
+      </div>
+
+      <!-- ============================ text selected ============================ -->
+      <div class="section hidden" id="panel-text">
+        <h2>Text</h2>
+
+        <label for="text-content">Content</label>
+        <textarea id="text-content" rows="3" placeholder="Type your caption&#10;(Enter for a new line)"></textarea>
+
+        <label>Alignment</label>
+        <div class="chips" id="align-chips">
+          <button class="chip" data-align="left">Left</button>
+          <button class="chip" data-align="center">Centre</button>
+          <button class="chip" data-align="right">Right</button>
+        </div>
+
+        <label for="text-wrap">Wrap width <span class="value" id="text-wrap-value">90%</span></label>
+        <input type="range" id="text-wrap" min="10" max="100" step="1">
+        <label class="check"><input type="checkbox" id="text-nowrap"> No wrapping</label>
+
+        <label for="text-size">Size <span class="value" id="text-size-value">64px</span></label>
+        <input type="range" id="text-size" min="10" max="400" step="1">
+
+        <label for="text-color">Colour</label>
+        <div class="row">
+          <input type="color" id="text-color">
+          <span class="value" id="text-color-value"></span>
+        </div>
+        <div class="swatches" id="text-swatches"></div>
+
+        <label for="text-font">Font</label>
+        <select id="text-font"></select>
+        <button class="wide small" id="btn-upload-font">Upload a font file&hellip;</button>
+
+        <label>Style</label>
+        <div class="chips">
+          <button class="chip" id="text-upper">UPPERCASE</button>
+          <button class="chip" id="text-bold">Bold</button>
+        </div>
+
+        <label for="text-outline">Outline <span class="value" id="text-outline-value">0px</span></label>
+        <input type="range" id="text-outline" min="0" max="30" step="1">
+        <div class="row">
+          <input type="color" id="text-outline-color">
+          <span class="value">outline colour</span>
+        </div>
+
+        <label>Speech bubble</label>
+        <div class="chips">
+          <button class="chip" id="text-bubble">Bubble</button>
+          <button class="chip" id="text-tail">Tail</button>
+        </div>
+        <div class="row bubble-colors">
+          <input type="color" id="bubble-fill" title="Bubble fill">
+          <input type="color" id="bubble-stroke" title="Bubble outline">
+          <span class="value">fill / outline</span>
+        </div>
+
+        <label for="text-rot">Rotation <span class="value" id="text-rot-value">0&deg;</span></label>
+        <input type="range" id="text-rot" min="-180" max="180" step="1">
+
+        <div class="layer-actions">
+          <button id="text-back" title="Send backward">&darr;</button>
+          <button id="text-front" title="Bring forward">&uarr;</button>
+          <button id="text-dupe" title="Duplicate (Ctrl+D)">Copy</button>
+          <button class="danger" id="text-delete">Delete</button>
+        </div>
+      </div>
+
+      <!-- =========================== image selected =========================== -->
+      <div class="section hidden" id="panel-image">
+        <h2>Image</h2>
+
+        <label for="image-scale">Size <span class="value" id="image-scale-value">100%</span></label>
+        <input type="range" id="image-scale" min="5" max="300" step="1">
+
+        <label for="image-rot">Rotation <span class="value" id="image-rot-value">0&deg;</span></label>
+        <input type="range" id="image-rot" min="-180" max="180" step="1">
+        <div class="chips">
+          <button class="chip" id="image-rot-left" title="Rotate 90&deg; left">&#8630; 90&deg;</button>
+          <button class="chip" id="image-rot-right" title="Rotate 90&deg; right">&#8631; 90&deg;</button>
+          <button class="chip" id="image-flip">Flip</button>
+        </div>
+
+        <label for="image-border">Border <span class="value" id="image-border-value">0px</span></label>
+        <input type="range" id="image-border" min="0" max="40" step="1">
+        <div class="row">
+          <input type="color" id="image-border-color">
+          <span class="value">border colour</span>
+        </div>
+
+        <button class="wide" id="btn-crop">Crop &amp; zoom&hellip;</button>
+        <button class="wide" id="image-fit">Show whole image</button>
+        <button class="wide" id="image-cover">Fill the canvas</button>
+
+        <div class="layer-actions">
+          <button id="image-back" title="Send backward">&darr;</button>
+          <button id="image-front" title="Bring forward">&uarr;</button>
+          <button id="image-dupe" title="Duplicate (Ctrl+D)">Copy</button>
+          <button class="danger" id="image-delete">Delete</button>
+        </div>
+
+        <p class="tip">Drag to move &middot; corner handle resizes &middot; the handle above rotates.</p>
+      </div>
+
+      <!-- ============================= crop mode ============================= -->
+      <div class="section hidden" id="panel-crop">
+        <h2>Crop &amp; zoom</h2>
+        <p class="tip">Drag the picture to reposition it inside the frame.</p>
+
+        <label for="crop-zoom">Zoom <span class="value" id="crop-zoom-value">100%</span></label>
+        <input type="range" id="crop-zoom" min="100" max="400" step="1">
+
+        <button class="wide" id="crop-reset">Reset crop</button>
+        <button class="wide primary" id="crop-done">Done</button>
+      </div>
+
+    </aside>
+  </main>
+
+  <footer class="statusbar">
+    <span id="status">Ready</span>
+    <span class="keys">Drag to move &middot; double-click text to edit &middot; Ctrl+Z undo &middot; Del removes</span>
+  </footer>
+
+</div>
+
+<input type="file" id="file-input" accept="image/*" multiple hidden>
+<input type="file" id="font-input" accept=".ttf,.otf,.woff,.woff2,font/*" hidden>
+
+<script src="store.js"></script>
+<script src="model.js"></script>
+<script src="render.js"></script>
+<script src="interact.js"></script>
+<script src="ui.js"></script>
+</body>
+</html>

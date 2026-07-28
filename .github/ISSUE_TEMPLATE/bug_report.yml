@@ -1,0 +1,64 @@
+name: Bug report
+description: Something in the editor behaves wrongly
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. The most useful thing you can give us is a set of steps that
+        reproduce the problem starting from an empty canvas.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What did you see, and what did you expect instead?
+      placeholder: |
+        Dragging a pinned caption after resizing it snapped it back to the edge.
+        I expected the drag to release the pin.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: From an empty canvas, if you can.
+      placeholder: |
+        1. Apply the "Top & bottom" template
+        2. Drag the bottom caption to the middle
+        3. Type a longer caption
+    validations:
+      required: true
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and OS
+      placeholder: Firefox 141 on Ubuntu 24.04
+    validations:
+      required: true
+
+  - type: dropdown
+    id: opened-via
+    attributes:
+      label: How did you open it?
+      options:
+        - Straight from disk (file://)
+        - Through a local server (http://localhost)
+        - Somewhere it is hosted
+    validations:
+      required: true
+
+  - type: textarea
+    id: console
+    attributes:
+      label: Console errors
+      description: Anything red in the browser's developer console. Leave blank if it is clean.
+      render: text
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: Screenshot or exported PNG
+      description: Drag an image in here if the problem is visual.

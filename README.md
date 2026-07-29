@@ -12,6 +12,10 @@
 </p>
 
 <p align="center">
+  <a href="https://sciscend.github.io/meme-collagen/"><b>▶ Try it live</b></a>
+</p>
+
+<p align="center">
   <img src="docs/screenshot.png" alt="MemeCollagen with four pictures in a grid, captions top and bottom, and emoji stickers" width="900">
 </p>
 
@@ -21,7 +25,48 @@ No dependencies, no build step, no server, no account, no upload. Open the HTML 
 works — and it keeps working on a plane, because your images never leave the tab they were
 dropped into.
 
+## How this was built
+
+MemeCollagen was written by an AI agent — [Claude Code](https://claude.com/claude-code) running
+Claude Opus 5 in auto mode — from **four short prompts in a single session** on 28 July 2026.
+The numbers below come from the session transcript, not from memory.
+
+| | |
+|---|---|
+| Human prompts | **4**, about 456 characters in total |
+| Active time | **~1 h 13 min** (spread over an 8-hour evening, mostly idle) |
+| Agent turns / tool calls | 231 / 128 |
+| Application code | 2,436 lines across 6 files |
+| Tests | 569 lines, **85 browser tests**, passing over `http://` and `file://` |
+
+The first prompt asked for three features — upload an image, add text boxes, change text size
+and colour — and invited the agent to say what was missing. It proposed seven additions, and the
+second prompt, all eight words of it, approved them:
+
+> grate - do all of them. And make sure it works.
+
+Undo/redo, autosave, cropping and rotation, text wrapping and alignment, touch and pinch
+gestures, custom font upload and collage templates all came from that sentence. The two
+remaining prompts asked for documentation that follows GitHub conventions, and settled the
+name. Everything else in this repository — the test suite, the CI workflow, the issue and PR
+templates, the contributing guide, the changelog — the agent decided to write on its own.
+
+**Worth stating plainly**, because the interesting part of a demonstration is where it strains:
+
+- The tests are the agent's own. They prove the app does what it was built to do and does not
+  regress; they cannot prove the specification was right.
+- The session filled its context window once and needed compacting mid-build.
+- Auto mode means all 128 tool calls ran without step-by-step approval, including the agent
+  writing and running its own headless-Chrome tests. That self-verification is the part worth
+  paying attention to.
+
+The point of publishing it is not the memes. It is a concrete, inspectable answer to *what can
+an AI agent actually finish?* — built by [SciScend](https://sciscend.com), which teaches this
+kind of work.
+
 ## Quick start
+
+Nothing to install: **<https://sciscend.github.io/meme-collagen/>**. Or keep a copy:
 
 ```bash
 git clone https://github.com/SciScend/meme-collagen.git

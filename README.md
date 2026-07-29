@@ -61,8 +61,8 @@ templates, the contributing guide, the changelog — the agent decided to write 
   paying attention to.
 
 The point of publishing it is not the memes. It is a concrete, inspectable answer to *what can
-an AI agent actually finish?* — built by [SciScend](https://sciscend.com), which teaches this
-kind of work.
+an AI agent actually finish?* — published by [SciScend](https://sciscend.com/), which teaches
+this kind of work.
 
 ## Quick start
 
@@ -218,9 +218,10 @@ in the [changelog](CHANGELOG.md).
 
 ## Licence
 
-[MIT](LICENSE) © 2026 SciScend. The bundled typefaces are OFL 1.1 — see
+[MIT](LICENSE) © 2026 [SciScend](https://sciscend.com/). The bundled typefaces are OFL 1.1 — see
 [FONT-LICENSE.txt](FONT-LICENSE.txt).
 
 ---
 
-Built by [Iva Popova](https://sciscend.com) — SciScend.
+Built with **Claude Opus 5** via [Claude Code](https://claude.com/claude-code).
+Published by [SciScend](https://sciscend.com/).

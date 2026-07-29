@@ -28,7 +28,7 @@ browser suite, the CI workflow and the repository documentation. The tests pass 
 
 ## Who made it
 
-Published by SciScend (https://sciscend.com) — Iva Popova, who teaches programming, machine
-learning and AI courses in Bulgarian and builds AI automation for small businesses. The
-repository is intended as an inspectable example of what an AI coding agent can finish
-unattended.
+Written by Claude Opus 5 via Claude Code. Published by SciScend (https://sciscend.com/), which
+teaches programming, machine learning and AI courses in Bulgarian and builds AI automation for
+small businesses. The repository is intended as an inspectable example of what an AI coding
+agent can finish unattended.

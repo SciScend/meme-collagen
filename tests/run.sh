@@ -43,5 +43,4 @@ else
 fi
 
 echo "Running tests: $URL"
-"$CHROME" --headless=new --no-sandbox --disable-gpu --virtual-time-budget=40000 \
-  --window-size=1280,900 --dump-dom "$URL" 2>/dev/null | python3 "$ROOT/tests/report.py"
+python3 "$ROOT/tests/drive.py" "$CHROME" "$URL" "$BUILD/.profile" | python3 "$ROOT/tests/report.py"

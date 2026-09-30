@@ -11,6 +11,12 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - A GitHub link in the toolbar, and a "Created by: SciScend" credit in the status bar.
 
+### Fixed
+
+- The test runner waits for the suite to finish in real time instead of in Chrome's virtual
+  time, which ran ahead while an autosave was being written to disk. The autosave section
+  failed on most CI runs because of it, and occasionally on local runs.
+
 ## [1.0.0] - 2026-07-28
 
 First release.

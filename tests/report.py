@@ -12,8 +12,7 @@ title = re.search(r'<title>([^<]*)</title>', dom)
 body = re.search(r'<pre id="results">(.*?)</pre>', dom, re.S)
 
 if not body:
-    print('No results — the suite did not finish. Run with a larger '
-          '--virtual-time-budget, or check the browser console.')
+    print('No results: the suite never started, or Chrome could not be driven.')
     sys.exit(1)
 
 print(html.unescape(body.group(1)))

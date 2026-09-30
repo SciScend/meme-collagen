@@ -15,6 +15,8 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - The README now covers only using the app; the story of how it was built and the code layout
   moved to [HOW-THIS-WAS-BUILT.md](HOW-THIS-WAS-BUILT.md).
+- The status bar shows the credit on the left, messages in the centre and the shortcut hints
+  on the right. It no longer says "Ready" when there is nothing to report.
 
 ### Fixed
 

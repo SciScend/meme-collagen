@@ -17,7 +17,7 @@ let statusTimer = null;
 function setStatus(msg) {
   statusEl.textContent = msg;
   clearTimeout(statusTimer);
-  statusTimer = setTimeout(() => { statusEl.textContent = 'Ready'; }, 4500);
+  statusTimer = setTimeout(() => { statusEl.textContent = ''; }, 4500);
 }
 
 /* ------------------------------------------------------------- selection */

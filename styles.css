@@ -274,8 +274,12 @@ main {
 
 /* ---------- status bar ---------- */
 
+/* Credit left, messages dead centre, shortcut hints right. The equal outer
+   columns keep a message centred however wide the texts either side are. */
 .statusbar {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
   gap: 16px;
   padding: 7px 16px;
   font-size: 12px;
@@ -284,13 +288,22 @@ main {
   border-top: 1px solid var(--line);
 }
 
-.statusbar .keys { margin-left: auto; }
+.statusbar .credit { white-space: nowrap; }
 
-.statusbar .credit {
-  padding-left: 16px;
-  border-left: 1px solid var(--line);
-  white-space: nowrap;
+#status {
+  color: var(--text);
+  text-align: center;
 }
+
+/* A long message squeezes the hints; they give way rather than wrap. */
+.statusbar .keys {
+  text-align: right;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .statusbar a { color: var(--text); text-decoration: none; }
 .statusbar a:hover { text-decoration: underline; }
 
@@ -301,5 +314,4 @@ main {
   .actions { margin-left: 0; width: 100%; }
   .actions button { flex: 1; }
   .statusbar .keys { display: none; }
-  .statusbar .credit { margin-left: auto; padding-left: 0; border-left: none; }
 }

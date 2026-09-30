@@ -69,7 +69,8 @@ it, and now does.
 - Two-space indent, semicolons, `'use strict'` at the top of each file, single quotes.
 - Keep to the existing shape: `model.js` owns state and geometry, `render.js` only draws,
   `interact.js` only handles input, `ui.js` only touches the panel and the DOM. A change that
-  needs all four is usually a change that wants rethinking.
+  needs all four is usually a change that wants rethinking. The file map and the design
+  decisions behind it are in [HOW-THIS-WAS-BUILT.md](HOW-THIS-WAS-BUILT.md#how-it-is-built).
 - Comments explain *why*, not *what*. The ones already in the code are the standard to match —
   most of them mark a trap someone (usually a browser) laid.
 

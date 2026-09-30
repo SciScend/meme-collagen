@@ -11,6 +11,11 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - A GitHub link in the toolbar, and a "Created by: SciScend" credit in the status bar.
 
+### Changed
+
+- The README now covers only using the app; the story of how it was built and the code layout
+  moved to [HOW-THIS-WAS-BUILT.md](HOW-THIS-WAS-BUILT.md).
+
 ### Fixed
 
 - The test runner waits for the suite to finish in real time instead of in Chrome's virtual

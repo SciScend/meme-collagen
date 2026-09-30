@@ -7,6 +7,10 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- A GitHub link in the toolbar, and a "Created by: SciScend" credit in the status bar.
+
 ## [1.0.0] - 2026-07-28
 
 First release.

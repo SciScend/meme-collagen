@@ -52,6 +52,12 @@ body {
   margin-left: auto;
 }
 
+.repo-link {
+  display: flex;
+  color: var(--muted);
+}
+.repo-link:hover { color: var(--text); }
+
 /* ---------- buttons & inputs ---------- */
 
 button {
@@ -277,11 +283,21 @@ main {
 
 .statusbar .keys { margin-left: auto; }
 
+.statusbar .credit {
+  padding-left: 16px;
+  border-left: 1px solid var(--line);
+  white-space: nowrap;
+}
+.statusbar a { color: var(--text); text-decoration: none; }
+.statusbar a:hover { text-decoration: underline; }
+
 @media (max-width: 820px) {
   main { grid-template-columns: 1fr; grid-template-rows: 1fr auto; }
   .panel { border-left: none; border-top: 1px solid var(--line); max-height: 46vh; }
   .toolbar { flex-wrap: wrap; gap: 10px; }
-  .actions { margin-left: 0; width: 100%; }
+  .actions { margin-left: 0; width: 100%; order: 1; }
   .actions button { flex: 1; }
+  .repo-link { margin-left: auto; }
   .statusbar .keys { display: none; }
+  .statusbar .credit { margin-left: auto; padding-left: 0; border-left: none; }
 }

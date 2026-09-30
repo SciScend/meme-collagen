@@ -42,6 +42,9 @@ body {
 }
 
 .brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   font-weight: 600;
   letter-spacing: .2px;
 }
@@ -54,9 +57,9 @@ body {
 
 .repo-link {
   display: flex;
-  color: var(--muted);
+  color: var(--text);
 }
-.repo-link:hover { color: var(--text); }
+.repo-link:hover { color: var(--accent); }
 
 /* ---------- buttons & inputs ---------- */
 
@@ -295,9 +298,8 @@ main {
   main { grid-template-columns: 1fr; grid-template-rows: 1fr auto; }
   .panel { border-left: none; border-top: 1px solid var(--line); max-height: 46vh; }
   .toolbar { flex-wrap: wrap; gap: 10px; }
-  .actions { margin-left: 0; width: 100%; order: 1; }
+  .actions { margin-left: 0; width: 100%; }
   .actions button { flex: 1; }
-  .repo-link { margin-left: auto; }
   .statusbar .keys { display: none; }
   .statusbar .credit { margin-left: auto; padding-left: 0; border-left: none; }
 }

@@ -14,6 +14,11 @@ const panels = {
 const statusEl = el('status');
 let statusTimer = null;
 
+/** The collage layout picked last, so the gap slider, a new canvas shape and
+ *  newly added pictures can re-apply it. Null once a template has arranged the
+ *  pictures its own way. */
+let lastLayout = null;
+
 function setStatus(msg) {
   statusEl.textContent = msg;
   clearTimeout(statusTimer);
@@ -73,6 +78,7 @@ function syncPanel() {
     el('layout-gap').value = layoutGap.value;
     el('layout-gap-value').textContent = layoutGap.value + 'px';
     markActiveRatio();
+    markActiveLayout();
     return;
   }
 
@@ -128,6 +134,12 @@ function syncPanel() {
   el('image-flip').classList.toggle('active', !!l.flip);
 }
 
+function markActiveLayout() {
+  for (const chip of document.querySelectorAll('#layout-chips .chip')) {
+    chip.classList.toggle('active', chip.dataset.layout === lastLayout);
+  }
+}
+
 function markActiveRatio() {
   for (const chip of document.querySelectorAll('#ratio-chips .chip')) {
     chip.classList.toggle('active', +chip.dataset.w === state.w && +chip.dataset.h === state.h);
@@ -147,7 +159,11 @@ function readAsDataURL(file) {
 
 async function loadFiles(files) {
   const picked = [...files].filter(f => f.type.startsWith('image/'));
-  if (!picked.length) return;
+  if (!picked.length) {
+    if (files.length) setStatus('Only pictures can be added: PNG, JPEG, GIF, WebP and the like.');
+    return;
+  }
+  const wasEmpty = !state.layers.length;
   setStatus(picked.length > 1 ? `Loading ${picked.length} images…` : 'Loading…');
 
   let added = 0;
@@ -167,11 +183,21 @@ async function loadFiles(files) {
     }
   }
 
-  if (added > 1) applyLayout('grid');
+  // Several pictures, or one more for a collage that has a layout, get arranged.
+  const arranged = added > 1 || (added > 0 && lastLayout !== null);
+  if (arranged) {
+    lastLayout = lastLayout || 'grid';
+    applyLayout(lastLayout);
+  }
+  // What comes next for fresh pictures (layouts, templates, stickers) is in the
+  // canvas panel; a single picture added to existing work stays selected to place.
+  if (added && (wasEmpty || arranged)) select(null);
   render();
   syncPanel();
   commit();
-  if (added) setStatus(`Added ${added} image${added > 1 ? 's' : ''}`);
+  if (added > 1) setStatus(`Added ${added} images. Try the other layouts in the panel.`);
+  else if (added && wasEmpty) setStatus('Added 1 image. Add a caption with + Text or a template.');
+  else if (added) setStatus('Added 1 image');
 }
 
 el('file-input').addEventListener('change', e => {
@@ -352,6 +378,7 @@ for (const [prefix] of [['text'], ['image']]) {
     const l = selected();
     if (l) { select(duplicateLayer(l).id); commit(); }
   });
+  el(`${prefix}-done`).addEventListener('click', () => select(null));
   el(`${prefix}-delete`).addEventListener('click', () => {
     removeLayer(state.selectedId);
     select(null);
@@ -373,30 +400,67 @@ for (const chip of document.querySelectorAll('#ratio-chips .chip')) {
     state.ratioLocked = true;
     state.w = +chip.dataset.w;
     state.h = +chip.dataset.h;
-    if (imageLayers().length) applyLayout('grid');
+    if (imageLayers().length) {
+      lastLayout = lastLayout || 'grid';
+      applyLayout(lastLayout);
+    }
     markActiveRatio();
+    markActiveLayout();
     render();
     commit();
   });
 }
 
+/* A thumbnail of each layout, drawn by the layout code itself so it can never
+ * disagree with what the button does. */
+const SVG_NS = 'http://www.w3.org/2000/svg';
+const ICON_PICTURES = { grid: 4, rows: 3, cols: 3, feature: 3, strip: 6 };
+
 for (const chip of document.querySelectorAll('#layout-chips .chip')) {
+  const name = chip.dataset.layout;
+  chip.prepend(layoutIcon(name));
   chip.addEventListener('click', () => {
-    const n = applyLayout(chip.dataset.layout);
+    const n = applyLayout(name);
+    if (n) lastLayout = name;
+    markActiveLayout();
     render();
     commit();
     setStatus(n ? `Arranged ${n} image${n > 1 ? 's' : ''}` : 'Add some images first');
   });
 }
 
+function layoutIcon(name) {
+  const svg = document.createElementNS(SVG_NS, 'svg');
+  svg.setAttribute('viewBox', '0 0 20 15');
+  svg.setAttribute('aria-hidden', 'true');
+  svg.classList.add('layout-icon');
+  for (const r of layoutRects(name, ICON_PICTURES[name], 1.5, 20, 15)) {
+    const rect = document.createElementNS(SVG_NS, 'rect');
+    rect.setAttribute('x', r.x);
+    rect.setAttribute('y', r.y);
+    rect.setAttribute('width', r.w);
+    rect.setAttribute('height', r.h);
+    rect.setAttribute('rx', 0.8);
+    svg.appendChild(rect);
+  }
+  return svg;
+}
+
 el('layout-gap').addEventListener('input', e => {
   layoutGap.value = +e.target.value;
   el('layout-gap-value').textContent = layoutGap.value + 'px';
+  if (lastLayout && applyLayout(lastLayout)) {
+    render();
+    debouncedCommit();
+  } else if (imageLayers().length > 1) {
+    setStatus('The gap applies when you pick a layout.');
+  }
 });
 
 for (const chip of document.querySelectorAll('#template-chips .chip')) {
   chip.addEventListener('click', () => {
     const label = templates[chip.dataset.template]();
+    lastLayout = null;
     select(state.layers[state.layers.length - 1].id);
     commit();
     setStatus(label + ' applied');
@@ -424,6 +488,7 @@ el('btn-clear').addEventListener('click', async () => {
   state.layers = [];
   state.selectedId = null;
   state.cropId = null;
+  lastLayout = null;
   await clearSaved();
   select(null);
   commit();

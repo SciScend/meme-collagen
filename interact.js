@@ -225,6 +225,15 @@ canvas.addEventListener('dblclick', e => {
 
 canvas.addEventListener('contextmenu', e => e.preventDefault());
 
+/* A press on the backdrop around the canvas lets go of the selection, as Escape
+ * does. A collage fills the canvas edge to edge, so there is often no empty
+ * canvas left to click. */
+stage.addEventListener('pointerdown', e => {
+  if (e.target !== stage) return;
+  if (croppingLayer()) exitCrop();
+  else if (state.selectedId) select(null);
+});
+
 /* Wheel: zoom the crop while cropping, otherwise resize the selection. */
 canvas.addEventListener('wheel', e => {
   const cropping = croppingLayer();

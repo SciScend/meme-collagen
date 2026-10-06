@@ -47,9 +47,11 @@ python3 -m http.server 8000
 
 ### Pictures
 
-- Add them with **+ Image**, by dropping files onto the canvas, or by pasting from the clipboard.
-- Drag to move, drag a corner to resize, drag the handle above to rotate (hold <kbd>Shift</kbd>
-  to snap to 15°). Scroll to resize. Rotate by 90° and flip from the side panel.
+- Add them with **+ Image** (or **Add pictures** on the empty canvas), by dropping files onto
+  the canvas, or by pasting from the clipboard.
+- Drag to move, drag a corner to resize, drag the round handle to rotate (hold <kbd>Shift</kbd>
+  to snap to 15°). The handle sits above the picture, or below it when the picture touches the
+  top edge. Scroll to resize. Rotate by 90° and flip from the side panel.
 - **Crop & zoom** — double-click a picture and the rest of the canvas dims, the parts you are
   cutting away show through as a ghost, and you drag the picture around inside its frame.
 - An optional photo border, in any colour.
@@ -60,7 +62,9 @@ python3 -m http.server 8000
 
 ### Collage layouts
 
-Grid, Rows, Columns, Big + side, and Filmstrip, with an adjustable gap.
+Grid, Rows, Columns, Big + side, and Filmstrip, each with a thumbnail of its arrangement, and
+an adjustable gap that reflows the collage as you drag it. Pictures added later join the layout
+in use, and so does a change of canvas shape.
 
 Frames are always filled edge to edge: the crop follows the frame's shape, so pictures are
 never letterboxed and never squashed.
@@ -111,7 +115,7 @@ inwards instead of sliding off. Dragging it releases the pin.
 | <kbd>Delete</kbd> | remove the selection |
 | arrow keys (<kbd>Shift</kbd> for bigger steps) | nudge |
 | <kbd>[</kbd> / <kbd>]</kbd> | send backward / bring forward |
-| <kbd>Esc</kbd> | leave crop mode, or deselect |
+| <kbd>Esc</kbd> | leave crop mode, or deselect (so do **Done** and a click beside the canvas) |
 | double-click | edit a caption, or crop a picture |
 | scroll | resize the selection, or zoom the crop |
 | one finger | drag, resize, rotate |
@@ -124,7 +128,7 @@ inwards instead of sliding off. Dragging it releases the pin.
 ./tests/run.sh file     # the same suite over file://
 ```
 
-85 checks covering importing, layouts, cropping, wrapping, rotation, dragging, pinch gestures,
+100 checks covering importing, layouts, cropping, wrapping, rotation, dragging, pinch gestures,
 undo/redo, bubbles, templates, custom fonts, autosave round-trips and the PNG export —
 including pixel assertions on the exported image.
 

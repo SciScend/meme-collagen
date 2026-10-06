@@ -147,21 +147,38 @@ function layerAt(p) {
   return null;
 }
 
-/** Handle size in canvas pixels — roughly constant on screen. */
+/** How the canvas is shown: on-screen pixels per canvas pixel (set by
+ *  fitToStage), and whether the main pointer is a finger. */
+const view = {
+  scale: 1,
+  touch: window.matchMedia('(pointer: coarse)').matches,
+};
+
+/** Handle size in canvas pixels, chosen so it is constant on screen. A phone
+ *  shows a 1000px canvas a quarter size, so this has to follow the display,
+ *  not the document; fingers also need a bigger target than a mouse. */
 function handleSize() {
-  return Math.max(10, Math.round(Math.max(state.w, state.h) / 75));
+  return (view.touch ? 16 : 11) / view.scale;
 }
 
 /** The interactive handles of a layer, in world coordinates. */
 function handlesOf(l) {
   const s = layerSize(l);
   const hw = s.w / 2, hh = s.h / 2;
+  // The rotate handle sits above the layer, unless that is off the canvas (a
+  // collage cell along the top edge) where nobody could reach it: then below.
+  let edgeY = -hh;
+  let rot = toWorld(l, { x: 0, y: -hh - handleSize() * 2.2 });
+  if (rot.x < 0 || rot.y < 0 || rot.x > state.w || rot.y > state.h) {
+    edgeY = hh;
+    rot = toWorld(l, { x: 0, y: hh + handleSize() * 2.2 });
+  }
   const out = [
     { name: 'nw', kind: 'scale', ...toWorld(l, { x: -hw, y: -hh }) },
     { name: 'ne', kind: 'scale', ...toWorld(l, { x: hw, y: -hh }) },
     { name: 'se', kind: 'scale', ...toWorld(l, { x: hw, y: hh }) },
     { name: 'sw', kind: 'scale', ...toWorld(l, { x: -hw, y: hh }) },
-    { name: 'rot', kind: 'rotate', ...toWorld(l, { x: 0, y: -hh - handleSize() * 2.2 }) },
+    { name: 'rot', kind: 'rotate', edgeY, ...rot },
   ];
   if (l.type === 'text') {
     out.push({ name: 'w', kind: 'width', ...toWorld(l, { x: -hw, y: 0 }) });
@@ -174,7 +191,7 @@ function handlesOf(l) {
 }
 
 function handleAt(l, p) {
-  const r = handleSize() * 1.3;
+  const r = handleSize() * (view.touch ? 1.8 : 1.3);
   return handlesOf(l).find(h => Math.hypot(p.x - h.x, p.y - h.y) <= r) || null;
 }
 
@@ -361,9 +378,8 @@ function placeInRect(l, rx, ry, rw, rh) {
 
 const layoutGap = { value: 12 };
 
-/** Rectangles for `n` pictures under the named layout. */
-function layoutRects(name, n, gap) {
-  const W = state.w, H = state.h;
+/** Rectangles for `n` pictures under the named layout, on a W x H canvas. */
+function layoutRects(name, n, gap, W = state.w, H = state.h) {
   const rects = [];
   const cell = (col, row, cols, rows, colSpan = 1, rowSpan = 1) => {
     const cw = (W - gap * (cols + 1)) / cols;

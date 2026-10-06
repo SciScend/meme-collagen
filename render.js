@@ -178,10 +178,11 @@ function drawChrome(c) {
   const s = layerSize(l);
   c.save();
   c.strokeStyle = cropping ? '#ffcc00' : ACCENT;
-  c.lineWidth = Math.max(2, state.w / 400);
+  const px = 1 / view.scale;   // one screen pixel, so the outline reads the same at any zoom
+  c.lineWidth = 1.5 * px;
 
   inLayerSpace(c, l, () => {
-    if (!cropping) c.setLineDash([9, 6]);
+    if (!cropping) c.setLineDash([6 * px, 4 * px]);
     c.strokeRect(-s.w / 2, -s.h / 2, s.w, s.h);
   });
 
@@ -190,10 +191,10 @@ function drawChrome(c) {
     const hs = handlesOf(l);
     const rotH = hs.find(h => h.kind === 'rotate');
     if (rotH) {
-      const top = toWorld(l, { x: 0, y: -s.h / 2 });
+      const base = toWorld(l, { x: 0, y: rotH.edgeY });
       c.setLineDash([]);
       c.beginPath();
-      c.moveTo(top.x, top.y);
+      c.moveTo(base.x, base.y);
       c.lineTo(rotH.x, rotH.y);
       c.stroke();
     }
@@ -213,6 +214,7 @@ function fitToStage() {
     (stage.clientHeight - pad) / state.h,
     1
   );
+  view.scale = k;
   const w = Math.max(1, Math.round(state.w * k)) + 'px';
   const h = Math.max(1, Math.round(state.h * k)) + 'px';
   canvas.style.width = w;

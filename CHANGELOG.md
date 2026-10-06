@@ -16,6 +16,12 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   canvases and phones, and stays hidden while a saved session is still loading.
 - While the canvas is empty it is drawn as a dashed drop target, and clicking anywhere on it
   opens the file picker.
+- A **Done** button at the top of the text and image panels, and a click on the backdrop beside
+  the canvas, both deselect and bring back the canvas panel. With a collage filling the canvas
+  edge to edge, Escape used to be the only way back to the layouts, templates and stickers.
+- Layout buttons show a thumbnail of their arrangement, and the layout in use is highlighted.
+- A favicon, and a theme colour for mobile browser bars.
+- A status message when a dropped or chosen file is not a picture.
 
 ### Changed
 
@@ -25,6 +31,19 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   on the right. It no longer says "Ready" when there is nothing to report.
 - **Download PNG** is shown as an ordinary button until there is something to download, so a
   new visitor's eye goes to adding pictures first.
+- After pictures are imported, the canvas panel is shown instead of the last picture's
+  settings, since layouts and templates are the next step; a hint in the status bar says so. A
+  single picture added to existing work is still selected, ready to place.
+- The gap slider reflows the current layout as you drag it. Before, it only took effect on the
+  next layout click. Pictures added to a collage, and a change of canvas shape, now keep the
+  layout in use rather than falling back to Grid.
+- Layer actions (Back, Front, Duplicate, Delete) moved from the bottom of the panel to the top,
+  with words instead of arrows, so Delete is never below the fold.
+- Selection handles keep the same size on screen whatever the canvas size, and are larger on
+  touch screens. On a phone they used to be about 4 pixels across.
+- A layer touching the top edge gets its rotate handle below it instead of off the canvas,
+  where it could not be reached.
+- On phones the toolbar buttons no longer wrap their labels onto two lines.
 
 ### Fixed
 

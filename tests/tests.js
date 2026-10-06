@@ -497,6 +497,60 @@ async function runTests() {
   key('z', { ctrlKey: true });
   ok('ctrl+Z undoes the delete', state.layers.length === nBefore + 1, state.layers.length);
 
+  // --- 14. finding your way around: panel navigation, layouts, handles
+  mark('section 14');
+  state.layers = [];
+  lastLayout = null;
+  select(null);
+  state.ratioLocked = true;
+  state.w = 1000; state.h = 1000;
+  const pic = (c, n) => fileFromDataURL(makeImage(600, 400, c), n);
+  await loadFiles([pic('#c0392b', 'p.png'), pic('#2980b9', 'q.png'), pic('#27ae60', 'r.png')]);
+  ok('importing several pictures shows the canvas panel, where the layouts are',
+     state.selectedId === null && !panels.canvas.classList.contains('hidden'), state.selectedId);
+  const activeLayout = () => (document.querySelector('#layout-chips .chip.active') || {}).dataset;
+  ok('the layout in use is marked', (activeLayout() || {}).layout === 'grid');
+
+  document.querySelector('#layout-chips [data-layout="rows"]').click();
+  ok('picking a layout marks it', (activeLayout() || {}).layout === 'rows');
+  el('layout-gap').value = 40;
+  el('layout-gap').dispatchEvent(new Event('input'));
+  const wantRow = layoutRects('rows', 3, 40)[0];
+  const gotRow = imageLayers()[0];
+  ok('the gap slider re-applies the layout in use',
+     near(gotRow.y - gotRow.h / 2, wantRow.y) && near(gotRow.h, wantRow.h),
+     `top=${(gotRow.y - gotRow.h / 2).toFixed(1)} h=${gotRow.h.toFixed(1)}`);
+
+  await loadFiles([pic('#8e44ad', 's.png')]);
+  const wantRow4 = layoutRects('rows', 4, 40)[3];
+  const newest = imageLayers()[3];
+  ok('a picture added later joins the layout in use',
+     imageLayers().length === 4 && near(newest.y, wantRow4.y + wantRow4.h / 2) && near(newest.h, wantRow4.h),
+     `${imageLayers().length} pictures, y=${newest.y.toFixed(1)}`);
+
+  await loadFiles([new File(['hello'], 'notes.txt', { type: 'text/plain' })]);
+  ok('a file that is not a picture says so', /Only pictures/.test(el('status').textContent),
+     el('status').textContent);
+
+  const edge = imageLayers()[0];
+  select(edge.id);
+  el('image-done').click();
+  ok('Done in a layer panel goes back to the canvas panel',
+     state.selectedId === null && !panels.canvas.classList.contains('hidden'));
+  select(edge.id);
+  stage.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+  ok('a press beside the canvas deselects', state.selectedId === null, state.selectedId);
+
+  ok('handles are the same size on screen at any canvas size',
+     near(handleSize() * view.scale, view.touch ? 16 : 11, 0.01), handleSize() * view.scale);
+  placeInRect(edge, 0, 0, 500, 300);
+  const rotTop = handlesOf(edge).find(h => h.kind === 'rotate');
+  ok('a layer on the top edge gets its rotate handle below, where it can be reached',
+     rotTop.y > edge.y && rotTop.y < state.h, rotTop.y);
+  placeInRect(edge, 250, 400, 500, 300);
+  const rotMid = handlesOf(edge).find(h => h.kind === 'rotate');
+  ok('otherwise the rotate handle stays above', rotMid.y < edge.y - 150, rotMid.y);
+
   // --- done
   const checks = results.filter(r => !r.startsWith('....'));
   const failed = checks.filter(r => r.startsWith('FAIL')).length;

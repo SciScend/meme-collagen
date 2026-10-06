@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 <title>MemeCollagen — meme collage editor</title>
 <meta name="description" content="Collage + generator. Build meme collages in the browser: arrange pictures, caption them, export a PNG. Nothing is uploaded anywhere.">
+<meta name="theme-color" content="#1a1d23">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%234c8dff'/%3E%3Crect x='6' y='6' width='9' height='20' rx='2' fill='%23fff'/%3E%3Crect x='17' y='6' width='9' height='9' rx='2' fill='%23fff'/%3E%3Crect x='17' y='17' width='9' height='9' rx='2' fill='%23fff' fill-opacity='.65'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="fonts.css">
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -20,11 +22,11 @@
       </a>
     </div>
     <div class="actions">
-      <button id="btn-add-image">+ Image</button>
-      <button id="btn-add-text">+ Text</button>
+      <button id="btn-add-image" title="Add pictures (you can also drop or paste them)">+ Image</button>
+      <button id="btn-add-text" title="Add a caption">+ Text</button>
       <button id="btn-undo" class="icon" title="Undo (Ctrl+Z)" disabled>&#8630;</button>
       <button id="btn-redo" class="icon" title="Redo (Ctrl+Shift+Z)" disabled>&#8631;</button>
-      <button id="btn-download" class="primary">Download PNG</button>
+      <button id="btn-download" class="primary" title="Save the canvas as a PNG file">Download<span class="label-extra"> PNG</span></button>
     </div>
   </header>
 
@@ -120,7 +122,16 @@
 
       <!-- ============================ text selected ============================ -->
       <div class="section hidden" id="panel-text">
-        <h2>Text</h2>
+        <div class="panel-head">
+          <h2>Text</h2>
+          <button class="small" id="text-done" title="Back to the canvas settings (Esc)">Done</button>
+        </div>
+        <div class="layer-actions">
+          <button id="text-back" title="Send backward ([)">Back</button>
+          <button id="text-front" title="Bring forward (])">Front</button>
+          <button id="text-dupe" title="Duplicate (Ctrl+D)">Duplicate</button>
+          <button class="danger" id="text-delete" title="Delete (Del)">Delete</button>
+        </div>
 
         <label for="text-content">Content</label>
         <textarea id="text-content" rows="3" placeholder="Type your caption&#10;(Enter for a new line)"></textarea>
@@ -177,17 +188,20 @@
         <label for="text-rot">Rotation <span class="value" id="text-rot-value">0&deg;</span></label>
         <input type="range" id="text-rot" min="-180" max="180" step="1">
 
-        <div class="layer-actions">
-          <button id="text-back" title="Send backward">&darr;</button>
-          <button id="text-front" title="Bring forward">&uarr;</button>
-          <button id="text-dupe" title="Duplicate (Ctrl+D)">Copy</button>
-          <button class="danger" id="text-delete">Delete</button>
-        </div>
       </div>
 
       <!-- =========================== image selected =========================== -->
       <div class="section hidden" id="panel-image">
-        <h2>Image</h2>
+        <div class="panel-head">
+          <h2>Image</h2>
+          <button class="small" id="image-done" title="Back to the canvas settings (Esc)">Done</button>
+        </div>
+        <div class="layer-actions">
+          <button id="image-back" title="Send backward ([)">Back</button>
+          <button id="image-front" title="Bring forward (])">Front</button>
+          <button id="image-dupe" title="Duplicate (Ctrl+D)">Duplicate</button>
+          <button class="danger" id="image-delete" title="Delete (Del)">Delete</button>
+        </div>
 
         <label for="image-scale">Size <span class="value" id="image-scale-value">100%</span></label>
         <input type="range" id="image-scale" min="5" max="300" step="1">
@@ -211,14 +225,7 @@
         <button class="wide" id="image-fit">Show whole image</button>
         <button class="wide" id="image-cover">Fill the canvas</button>
 
-        <div class="layer-actions">
-          <button id="image-back" title="Send backward">&darr;</button>
-          <button id="image-front" title="Bring forward">&uarr;</button>
-          <button id="image-dupe" title="Duplicate (Ctrl+D)">Copy</button>
-          <button class="danger" id="image-delete">Delete</button>
-        </div>
-
-        <p class="tip">Drag to move &middot; corner handle resizes &middot; the handle above rotates.</p>
+        <p class="tip">Drag to move &middot; a corner resizes &middot; the round handle rotates &middot; on a touch screen, pinch and twist with two fingers.</p>
       </div>
 
       <!-- ============================= crop mode ============================= -->

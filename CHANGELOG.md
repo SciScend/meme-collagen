@@ -10,6 +10,12 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Added
 
 - A GitHub link in the toolbar, and a "Created by: SciScend" credit in the status bar.
+- A welcome card on the empty canvas, in place of the faint "Drop images here" hint at the
+  bottom: what the tool is for, **Add pictures** and **Start with text** buttons, the three
+  steps from picture to PNG, and a note that nothing is uploaded. It shrinks to fit small
+  canvases and phones, and stays hidden while a saved session is still loading.
+- While the canvas is empty it is drawn as a dashed drop target, and clicking anywhere on it
+  opens the file picker.
 
 ### Changed
 
@@ -17,6 +23,8 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   moved to [HOW-THIS-WAS-BUILT.md](HOW-THIS-WAS-BUILT.md).
 - The status bar shows the credit on the left, messages in the centre and the shortcut hints
   on the right. It no longer says "Ready" when there is nothing to report.
+- **Download PNG** is shown as an ordinary button until there is something to download, so a
+  new visitor's eye goes to adding pictures first.
 
 ### Fixed
 

@@ -84,6 +84,16 @@ async function runTests() {
 
   // --- 1. import images through the real file pipeline
   mark('section 1');
+  await booted;
+  const welcome = el('empty-state');
+  ok('empty canvas shows the welcome card', getComputedStyle(welcome).display !== 'none');
+  let picks = 0;
+  const realPick = el('file-input').click;
+  el('file-input').click = () => { picks++; };
+  canvas.click();
+  el('empty-add-image').click();
+  ok('empty canvas and welcome button both open the file picker', picks === 2, picks);
+
   state.ratioLocked = true;
   state.w = 1000; state.h = 1000;
   const files = [
@@ -94,6 +104,11 @@ async function runTests() {
   await loadFiles(files);
   ok('three images imported', imageLayers().length === 3, imageLayers().length);
   ok('assets registered', assetMap.size >= 3, assetMap.size);
+  ok('welcome card hides once there is something on the canvas',
+     getComputedStyle(welcome).display === 'none');
+  canvas.click();
+  ok('a full canvas does not open the file picker on click', picks === 2, picks);
+  el('file-input').click = realPick;
 
   // --- 2. collage layouts
   mark('section 2');

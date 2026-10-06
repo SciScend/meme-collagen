@@ -170,18 +170,147 @@ main {
   touch-action: none;      /* required for pinch gestures */
 }
 
-.hint {
-  position: absolute;
-  bottom: 26px;
-  margin: 0;
-  padding: 6px 12px;
-  color: var(--muted);
-  background: #0e1013cc;
-  border-radius: 20px;
-  pointer-events: none;
+/* ---------- empty canvas ---------- */
+
+/* body.empty is set by render(); body.booting stays until boot() has looked for
+   a saved session, so a returning user never sees the welcome flash past. */
+
+/* Stacked on the canvas in the stage's single grid cell; fitToStage() gives it
+   the canvas's on-screen size. */
+#canvas, .empty-state { grid-area: 1 / 1; }
+
+.empty-state {
+  display: none;
+  place-items: center;
+  padding: clamp(12px, 5%, 30px);
+  container: frame / size;   /* the card adapts to the room the canvas has */
+  pointer-events: none;      /* drops and clicks around the card reach the canvas */
 }
 
-.hint.hidden { display: none; }
+body.empty:not(.booting) .empty-state { display: grid; }
+
+body.empty:not(.booting) #canvas {
+  cursor: pointer;
+  outline: 2px dashed #aab2bf;
+  outline-offset: -14px;
+}
+
+body.empty:not(.booting) .stage.dragover #canvas { outline-color: var(--accent); }
+
+.empty-card {
+  pointer-events: auto;
+  width: min(440px, 100%);
+  max-height: 100%;
+  overflow-y: auto;
+  padding: 26px 28px 20px;
+  text-align: center;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: 0 14px 44px #000b;
+  transition: border-color .15s, box-shadow .15s;
+}
+
+.stage.dragover .empty-card {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px #4c8dff40, 0 14px 44px #000b;
+}
+
+.empty-icon { display: block; margin: 0 auto 10px; }
+.empty-icon .frame {
+  fill: none;
+  stroke: var(--muted);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.empty-icon .badge { fill: var(--accent); stroke: var(--panel); stroke-width: 3; }
+.empty-icon .plus { stroke: #fff; stroke-width: 2.5; stroke-linecap: round; }
+
+.empty-card h2 {
+  margin: 0 0 6px;
+  font-size: 21px;
+  line-height: 1.25;
+}
+
+.empty-card p { margin: 0; }
+
+.empty-lead { color: var(--muted); font-size: 15px; }
+
+.empty-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin: 18px 0 10px;
+}
+.empty-actions button { padding: 10px 18px; font-size: 15px; }
+
+.empty-alt { color: var(--muted); font-size: 12px; }
+
+.empty-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 20px 0 0;
+  padding: 16px 0 0;
+  border-top: 1px solid var(--line);
+  list-style: none;
+  counter-reset: step;
+  font-size: 12px;
+  line-height: 1.3;
+  color: var(--muted);
+}
+
+.empty-steps li { counter-increment: step; }
+
+.empty-steps li::before {
+  content: counter(step);
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  margin: 0 auto 6px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.empty-card .empty-private {
+  margin-top: 16px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.empty-private svg { vertical-align: -1px; margin-right: 3px; }
+
+/* Shed the extras as the canvas gets smaller; on a phone it is small indeed. */
+@container frame (max-height: 460px) {
+  .empty-icon, .empty-steps { display: none; }
+}
+@container frame (max-height: 300px) or (max-width: 320px) {
+  .empty-card { padding: 16px 16px 18px; border-radius: 12px; }
+  .empty-card h2 { font-size: 18px; }
+  .empty-lead { font-size: 13px; }
+  .empty-actions { margin: 14px 0 0; gap: 8px; }
+  .empty-actions button { padding: 9px 14px; font-size: 14px; }
+  .empty-alt, .empty-private { display: none; }
+}
+@container frame (max-width: 300px) {
+  .empty-actions button { flex: 1 1 100%; }
+}
+
+/* Touch screens have nothing to drag from and rarely a clipboard picture. */
+@media (pointer: coarse) {
+  .empty-alt { display: none; }
+}
+
+/* Nothing to download yet: keep the eye on the welcome card instead. */
+body.empty button#btn-download {
+  background: var(--bg-soft);
+  border-color: var(--line);
+  color: var(--muted);
+}
 
 /* ---------- side panel ---------- */
 

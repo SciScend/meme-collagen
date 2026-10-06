@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="fonts.css">
 <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="booting">
 
 <div class="app">
 
@@ -31,7 +31,37 @@
   <main>
     <section class="stage" id="stage">
       <canvas id="canvas"></canvas>
-      <p class="hint" id="hint">Drop images here &middot; click <b>+ Image</b> &middot; or paste from the clipboard</p>
+
+      <!-- Shown only while the canvas is empty: what the tool is for, and the first step. -->
+      <div class="empty-state" id="empty-state">
+        <div class="empty-card">
+          <svg class="empty-icon" viewBox="0 0 48 48" width="56" height="56" aria-hidden="true">
+            <g class="frame">
+              <rect x="3" y="7" width="32" height="27" rx="4"/>
+              <circle cx="12" cy="15.5" r="3"/>
+              <path d="M3 29l9-8 7 6 5-4 11 9"/>
+            </g>
+            <circle class="badge" cx="37" cy="36" r="10"/>
+            <path class="plus" d="M37 31v10M32 36h10"/>
+          </svg>
+          <h2>Make a meme or a collage</h2>
+          <p class="empty-lead">Pick one picture for a meme, or several for a collage.</p>
+          <div class="empty-actions">
+            <button class="primary" id="empty-add-image">Add pictures</button>
+            <button id="empty-add-text">Start with text</button>
+          </div>
+          <p class="empty-alt">Or drag them onto the canvas, or paste from the clipboard.</p>
+          <ol class="empty-steps">
+            <li>Add pictures</li>
+            <li>Pick a layout, add captions</li>
+            <li>Download a PNG</li>
+          </ol>
+          <p class="empty-private">
+            <svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><path fill="currentColor" d="M8 1a3.5 3.5 0 0 0-3.5 3.5V7H4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1h-.5V4.5A3.5 3.5 0 0 0 8 1zm2 6H6V4.5a2 2 0 1 1 4 0V7z"/></svg>
+            Nothing is uploaded. Your pictures stay in this browser.
+          </p>
+        </div>
+      </div>
     </section>
 
     <aside class="panel" id="panel">

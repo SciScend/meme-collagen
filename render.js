@@ -8,7 +8,7 @@
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 const stage = document.getElementById('stage');
-const hint = document.getElementById('hint');
+const emptyState = document.getElementById('empty-state');
 
 const ACCENT = '#4c8dff';
 
@@ -213,8 +213,13 @@ function fitToStage() {
     (stage.clientHeight - pad) / state.h,
     1
   );
-  canvas.style.width = Math.max(1, Math.round(state.w * k)) + 'px';
-  canvas.style.height = Math.max(1, Math.round(state.h * k)) + 'px';
+  const w = Math.max(1, Math.round(state.w * k)) + 'px';
+  const h = Math.max(1, Math.round(state.h * k)) + 'px';
+  canvas.style.width = w;
+  canvas.style.height = h;
+  // The welcome card lives inside the canvas frame, so it gets the same box.
+  emptyState.style.width = w;
+  emptyState.style.height = h;
 }
 
 function render() {
@@ -228,7 +233,9 @@ function render() {
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   drawScene(ctx);
   drawChrome(ctx);
-  hint.classList.toggle('hidden', state.layers.length > 0);
+  // styles.css keys the welcome card, the drop-target look and the muted
+  // Download button off this one class.
+  document.body.classList.toggle('empty', !state.layers.length);
 }
 
 /** Render the document on its own canvas at `scale`, with no editing chrome. */

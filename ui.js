@@ -432,12 +432,26 @@ el('btn-clear').addEventListener('click', async () => {
 
 /* ------------------------------------------------------------- toolbar */
 
-el('btn-add-image').addEventListener('click', () => el('file-input').click());
-el('btn-add-text').addEventListener('click', () => {
+function pickImages() {
+  el('file-input').click();
+}
+
+function startText() {
   select(addTextLayer().id);
   commit();
   el('text-content').select();
+}
+
+el('btn-add-image').addEventListener('click', pickImages);
+el('btn-add-text').addEventListener('click', startText);
+el('empty-add-image').addEventListener('click', pickImages);
+el('empty-add-text').addEventListener('click', startText);
+
+// While there is nothing on it, the whole canvas is an "add pictures" button.
+canvas.addEventListener('click', () => {
+  if (!state.layers.length) pickImages();
 });
+
 el('btn-undo').addEventListener('click', undo);
 el('btn-redo').addEventListener('click', redo);
 
@@ -490,6 +504,8 @@ async function boot() {
     note.textContent = 'Saved automatically in this browser (local storage).';
   }
   if (restored) setStatus('Restored your last session');
+  // Only now does an empty canvas mean a new user rather than a save still loading.
+  document.body.classList.remove('booting');
 }
 
-boot();
+const booted = boot();

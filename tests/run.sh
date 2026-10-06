@@ -35,7 +35,7 @@ if [ "$MODE" = "file" ]; then
   URL="file://$BUILD/index.html"
 else
   PORT=$(python3 -c 'import socket;s=socket.socket();s.bind(("",0));print(s.getsockname()[1]);s.close()')
-  (cd "$BUILD" && python3 -m http.server "$PORT" >/dev/null 2>&1) &
+  python3 -m http.server "$PORT" --directory "$BUILD" >/dev/null 2>&1 &
   SERVER=$!
   trap 'kill $SERVER 2>/dev/null; rm -rf "$BUILD"' EXIT
   sleep 1

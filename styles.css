@@ -7,6 +7,7 @@
   --muted: #949cab;
   --accent: #4c8dff;
   --danger: #ff5f56;
+  --safe: #5ad48a;
   --radius: 8px;
 }
 
@@ -280,7 +281,7 @@ body.empty:not(.booting) .stage.dragover #canvas { outline-color: var(--accent);
 .empty-card .empty-private {
   margin-top: 16px;
   font-size: 12px;
-  color: var(--muted);
+  color: var(--safe);
 }
 .empty-private svg { vertical-align: -1px; margin-right: 3px; }
 

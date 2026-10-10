@@ -564,9 +564,9 @@ async function boot() {
 
   const note = el('storage-note');
   if (mode === 'none') {
-    note.textContent = 'This browser blocks storage here, so work is not saved between visits.';
+    note.textContent = 'Your browser blocks storage here, so work is not saved between visits.';
   } else if (mode === 'local') {
-    note.textContent = 'Saved automatically in this browser (local storage).';
+    note.textContent = 'Saved automatically in your browser (local storage).';
   }
   if (restored) setStatus('Restored your last session');
   // Only now does an empty canvas mean a new user rather than a save still loading.

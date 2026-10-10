@@ -551,6 +551,42 @@ async function runTests() {
   const rotMid = handlesOf(edge).find(h => h.kind === 'rotate');
   ok('otherwise the rotate handle stays above', rotMid.y < edge.y - 150, rotMid.y);
 
+  // --- 15. New starts over
+  mark('section 15');
+  document.querySelector('#ratio-chips [data-w="1600"]').click();
+  state.bg = '#ff0000';
+  commit();
+  const nWork = state.layers.length;
+  const realConfirm = window.confirm;
+  let asked = 0;
+  window.confirm = () => { asked++; return false; };
+  el('btn-new').click();
+  ok('New asks before clearing work', asked === 1, asked);
+  ok('saying no keeps the work', state.layers.length === nWork && state.bg === '#ff0000');
+
+  window.confirm = () => { asked++; return true; };
+  await startNew();
+  ok('New empties the canvas', state.layers.length === 0, state.layers.length);
+  ok('New goes back to a white square', state.w === 1000 && state.h === 1000 && state.bg === '#ffffff'
+     && !state.ratioLocked, `${state.w}x${state.h} ${state.bg} locked=${state.ratioLocked}`);
+  ok('New forgets the layout and gap', lastLayout === null && layoutGap.value === 12
+     && el('layout-gap').value === '12' && !document.querySelector('#layout-chips .chip.active'),
+     `${lastLayout} gap=${layoutGap.value}`);
+  ok('New shows the canvas panel', !panels.canvas.classList.contains('hidden'));
+  ok('New leaves no saved copy for the next visit', !(await loadProject()));
+  undo();
+  ok('Undo after New brings the work back', state.layers.length === nWork && state.bg === '#ff0000',
+     state.layers.length);
+  redo();
+  asked = 0;
+  await startNew();
+  ok('New on an empty canvas does not ask', asked === 0, asked);
+  window.confirm = realConfirm;
+
+  await loadFiles([fileFromDataURL(makeImage(600, 400, '#c0392b'), 'fresh.png')]);
+  ok('after New the first picture sets the canvas shape again', state.w === 600 && state.h === 400,
+     `${state.w}x${state.h}`);
+
   // --- done
   const checks = results.filter(r => !r.startsWith('....'));
   const failed = checks.filter(r => r.startsWith('FAIL')).length;

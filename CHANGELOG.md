@@ -9,6 +9,11 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- A **New** button in the toolbar that starts over: it empties the canvas, sets it back to a
+  white square, forgets the layout and the saved copy, so the next visit opens empty too. It
+  asks first when there is work on the canvas, and Undo brings that work back. On a phone it
+  sits in the top row beside the name. On reload, the "Restored your last session" message
+  now points to it.
 - A GitHub link in the toolbar, and a "Created by: SciScend" credit in the status bar.
 - A welcome card on the empty canvas, in place of the faint "Drop images here" hint at the
   bottom: what the tool is for, **Add pictures** and **Start with text** buttons, the three
@@ -45,8 +50,15 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   where it could not be reached.
 - On phones the toolbar buttons no longer wrap their labels onto two lines.
 
+### Removed
+
+- The **Clear everything** button at the bottom of the canvas panel, which **New** replaces. It
+  was easy to miss, and it kept the old canvas shape and background.
+
 ### Fixed
 
+- On a 320px-wide phone the toolbar ran 17px off the edge of the screen. Its buttons are packed
+  a little tighter at 380px and below so they fit.
 - The test runner waits for the suite to finish in real time instead of in Chrome's virtual
   time, which ran ahead while an autosave was being written to disk. The autosave section
   failed on most CI runs because of it, and occasionally on local runs.

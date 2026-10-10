@@ -236,7 +236,7 @@ function render() {
   drawScene(ctx);
   drawChrome(ctx);
   // styles.css keys the welcome card, the drop-target look and the muted
-  // Download button off this one class.
+  // Download and New buttons off this one class.
   document.body.classList.toggle('empty', !state.layers.length);
 }
 

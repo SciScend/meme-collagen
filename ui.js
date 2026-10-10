@@ -483,19 +483,26 @@ for (const emoji of STICKERS) {
   stickerGrid.appendChild(b);
 }
 
-el('btn-clear').addEventListener('click', async () => {
-  if (state.layers.length && !confirm('Remove every image and text box?')) return;
-  state.layers = [];
-  state.selectedId = null;
-  state.cropId = null;
+/* ------------------------------------------------------------- toolbar */
+
+/** The document as it stands before boot() restores a saved session, which is
+ *  what New goes back to. */
+const FRESH_DOC = snapshot();
+const FRESH_GAP = layoutGap.value;
+
+/** Start over: an empty white square, no layout, and no saved copy waiting on
+ *  the next visit. Undo still brings the old picture back. */
+async function startNew() {
+  const hadWork = state.layers.length > 0;
+  if (hadWork && !confirm('Start a new picture? This one will be cleared, so download it first if you want to keep it.')) return;
+  restoreSnapshot(FRESH_DOC);
+  layoutGap.value = FRESH_GAP;
   lastLayout = null;
-  await clearSaved();
   select(null);
   commit();
-  setStatus('Cleared');
-});
-
-/* ------------------------------------------------------------- toolbar */
+  setStatus(hadWork ? 'New canvas. Undo brings the old one back.' : 'New canvas');
+  await clearSaved();
+}
 
 function pickImages() {
   el('file-input').click();
@@ -507,6 +514,7 @@ function startText() {
   el('text-content').select();
 }
 
+el('btn-new').addEventListener('click', startNew);
 el('btn-add-image').addEventListener('click', pickImages);
 el('btn-add-text').addEventListener('click', startText);
 el('empty-add-image').addEventListener('click', pickImages);
@@ -568,7 +576,7 @@ async function boot() {
   } else if (mode === 'local') {
     note.textContent = 'Saved automatically in your browser (local storage).';
   }
-  if (restored) setStatus('Restored your last session');
+  if (restored) setStatus('Restored your last session. Press New to start over.');
   // Only now does an empty canvas mean a new user rather than a save still loading.
   document.body.classList.remove('booting');
 }

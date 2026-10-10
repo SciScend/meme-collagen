@@ -104,6 +104,8 @@ inwards instead of sliding off. Dragging it releases the pin.
 - Full undo/redo, 80 steps deep.
 - Your work saves itself — IndexedDB where available, otherwise local storage. The status line
   says so plainly if the browser blocks storage entirely.
+- **New** in the toolbar starts over with an empty white canvas and forgets the saved copy, so
+  the next visit opens empty too. Undo brings the old picture back if you change your mind.
 - **Download PNG** at 1×, 2× or 3× the canvas size, with none of the editing outlines baked in.
 
 ## Keyboard & touch

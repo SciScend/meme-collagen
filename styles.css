@@ -50,10 +50,13 @@ body {
   letter-spacing: .2px;
 }
 
+/* New stands apart from the editing buttons; on a phone it shares the top row
+ * with the name, out of the way of + Image. */
+#btn-new { margin-left: auto; }
+
 .actions {
   display: flex;
   gap: 8px;
-  margin-left: auto;
 }
 
 .repo-link {
@@ -306,8 +309,9 @@ body.empty:not(.booting) .stage.dragover #canvas { outline-color: var(--accent);
   .empty-alt { display: none; }
 }
 
-/* Nothing to download yet: keep the eye on the welcome card instead. */
-body.empty button#btn-download {
+/* Nothing to download or start over yet: keep the eye on the welcome card instead. */
+body.empty button#btn-download,
+body.empty button#btn-new {
   background: var(--bg-soft);
   border-color: var(--line);
   color: var(--muted);
@@ -469,4 +473,6 @@ body.empty button#btn-download {
 
 @media (max-width: 380px) {
   .label-extra { display: none; }
+  .actions { gap: 4px; }
+  .actions button { padding-left: 6px; padding-right: 6px; }
 }
